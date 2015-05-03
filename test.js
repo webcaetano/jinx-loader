@@ -17,6 +17,5 @@ describe('jinx-loader', function() {
 		expect(pkgs.as.length).to.be.at.least(1);
 		expect(pkgs.swc.length).to.be.at.least(1);
 		done();
-		console.log(pkgs);
 	});
 });
