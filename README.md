@@ -1,6 +1,6 @@
 # [![Imgur](http://i.imgur.com/FHjshUv.png)](https://github.com/webcaetano/jinx)
 
-Jinx loader is a [Jinx](https://github.com/webcaetano/jinx) Package loader [Kappa](http://static-cdn.jtvnw.net/emoticons/v1/25/1.0)
+Jinx loader is a [Jinx](https://github.com/webcaetano/jinx) Package loader ![Kappa](http://static-cdn.jtvnw.net/emoticons/v1/25/1.0)
 
 ### Installation
 
