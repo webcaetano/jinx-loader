@@ -15,7 +15,7 @@ var jinxLoader = require('jinx-loader');
 
 var mainFile = 'test/app/flash/main.as';
 var pkgs = jinxLoader(mainFile);  
-// return all .as and .swc files on node_modules
+// return all .as and .swc files on node_modules with path relative to mainFile
 // jinx packages should be name with "jinx-" like "jinx-example"
 ```
 
