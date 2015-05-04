@@ -49,13 +49,13 @@ var removeEmpty = function(arr){
 var getJinxPkgsNames = function(options){
 	options = options || {};
 
-	var pattern = arrayify(options.pattern || ['jinx-*','jinx.as']);
+	var pattern = arrayify(options.pattern || ['jinx-*']);
 	var config = options.config || findup('package.json');
 	var scope = arrayify(options.scope || ['dependencies', 'devDependencies', 'peerDependencies']);
 
 	if (typeof config === 'string') config = require(path.resolve(config));
 
-	pattern.concat(['!jinx-loader']);
+	pattern.concat(['!jinx','!jinx-loader']);
 
 	var names = scope.reduce(function (result, prop) {
 		return result.concat(Object.keys(config[prop] || {}));
@@ -89,7 +89,7 @@ module.exports = function(relativeTo){
 		if(path.extname(allFiles[i])=='.as'){
 			files['as'].push(pathToSrcFile(relativeTo,allFiles[i]));
 		} else {
-			files['swc'].push(pathToSrcFile('./',path.dirname(allFiles[i])));
+			files['swc'].push(pathToSrcFile('./',allFiles[i]));
 		}
 	}
 

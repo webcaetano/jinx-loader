@@ -1,6 +1,6 @@
 {
 	"name": "jinx-loader",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Jinx packages loader",
 	"main": "index.js",
 	"scripts": {
