@@ -49,7 +49,7 @@ var removeEmpty = function(arr){
 var getJinxPkgsNames = function(options){
 	options = options || {};
 
-	var pattern = arrayify(options.pattern || ['jinx-*']);
+	var pattern = arrayify(options.pattern || ['jinx-*','jinx.as']);
 	var config = options.config || findup('package.json');
 	var scope = arrayify(options.scope || ['dependencies', 'devDependencies', 'peerDependencies']);
 
