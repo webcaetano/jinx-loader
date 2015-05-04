@@ -55,7 +55,7 @@ var getJinxPkgsNames = function(options){
 
 	if (typeof config === 'string') config = require(path.resolve(config));
 
-	pattern.concat(['!jinx','!jinx-loader']);
+	pattern.concat(['!jinx-loader']);
 
 	var names = scope.reduce(function (result, prop) {
 		return result.concat(Object.keys(config[prop] || {}));
