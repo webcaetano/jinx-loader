@@ -12,9 +12,9 @@ describe('jinx-loader', function() {
 		var mainFile = 'test/app/flash/main.as';
 		var pkgs = jinxLoader(mainFile);
 
-		expect(pkgs.as).to.exist;
+		expect(pkgs.jinx).to.exist;
 		expect(pkgs.swc).to.exist;
-		expect(pkgs.as.length).to.be.at.least(1);
+		expect(pkgs.jinx.length).to.be.at.least(1);
 		expect(pkgs.swc.length).to.be.at.least(1);
 		done();
 	});
