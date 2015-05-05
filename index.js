@@ -3,7 +3,6 @@ var fs = require('fs');
 var findup = require('findup-sync');
 var globule = require('globule');
 
-
 var pathToSrcFile = function(src,dest){
 	var p = path.relative(path.dirname(src),path.dirname(dest)).split('\\').join('/');
 	return (p && p.length ? p+'/'+path.basename(dest) : dest);
@@ -49,7 +48,7 @@ var removeEmpty = function(arr){
 	return arr;
 }
 
-var getJinxPkgsNames = function(options){
+var getAllPkgsNames = function(options){
 	options = options || {};
 
 	var pattern = arrayify(options.pattern || ['*']);
@@ -80,12 +79,11 @@ function arrayify(el) {
 	return Array.isArray(el) ? el : [el];
 }
 
-var isNodeModule = function(pkgs,module){
+var pkgs = getAllPkgsNames();
+
+var isNodeModule = function(module){
 	return !(pkgs.indexOf(module)==-1 && (path.extname(module)=='.as' || path.extname(module)=='.jinx'))
 }
-
-
-var pkgs = getJinxPkgsNames();
 
 module.exports = {
 	main:function(modules,relativeTo){
@@ -94,7 +92,7 @@ module.exports = {
 		var files = [];
 
 		for(i in modules){
-			if(isNodeModule(pkgs,modules[i])){
+			if(isNodeModule(modules[i])){
 				var pkgFile = JSON.parse(fs.readFileSync(path.join(root, modules[i], 'package.json')));
 				var jinxPkgFiles = getJinxPkgFiles(pkgFile);
 				if(jinxPkgFiles.length) files = files.concat(addPkgPath(jinxPkgFiles,path.join(root, modules[i])));
@@ -113,15 +111,15 @@ module.exports = {
 		var pkgsFiles = [path.join('./', 'package.json')];
 
 		for(i in modules){
-			if(isNodeModule(pkgs,modules[i])){
+			if(isNodeModule(modules[i])){
 				pkgsFiles.push(path.join(root, modules[i], 'package.json'));
 			}
 		}
 
 		for(i in pkgsFiles){
 			var jinxPkgFiles = getJinxPkgFiles(JSON.parse(fs.readFileSync(pkgsFiles[i])),true);
-			if(isNodeModule(pkgs,modules[i])){
-				if(jinxPkgFiles.length) files = files.concat(addPkgPath(jinxPkgFiles,path.join(root, modules[i])));
+			if(isNodeModule(pkgsFiles[i])){
+				if(jinxPkgFiles.length)files = files.concat(addPkgPath(jinxPkgFiles,path.dirname(pkgsFiles[i])));
 			} else {
 				files = files.concat(jinxPkgFiles);
 			}

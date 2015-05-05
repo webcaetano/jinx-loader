@@ -1,0 +1,12 @@
+require('jinx-mempanel')();
+
+
+var myMc = new foo();
+
+myMc.x = 250;
+myMc.y = 100;
+addChild(myMc);
+
+
+
+

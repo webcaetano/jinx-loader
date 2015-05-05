@@ -1,29 +1,29 @@
 {
-	"name": "jinx-loader",
-	"version": "1.0.7",
-	"description": "Jinx packages loader",
-	"main": "index.js",
-	"scripts": {
-		"test": "mocha test.js"
-	},
-	"keywords": [
-		"jinx",
-		"as3",
-		"flash",
-		"swf",
-		"swc",
-		"packages",
-		"loader"
-	],
-	"author": "Andre Caetano",
-	"license": "MIT",
-	"dependencies": {
-		"findup-sync": "^0.2.1",
-		"globule": "^0.2.0"
-	},
-	"devDependencies": {
-		"chai": "^2.3.0",
-		"jinx-mempanel": "^1.0.2",
-		"mocha": "^2.2.4"
-	}
+  "name": "jinx-loader",
+  "version": "1.0.7",
+  "description": "Jinx packages loader",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "keywords": [
+    "jinx",
+    "as3",
+    "flash",
+    "swf",
+    "swc",
+    "packages",
+    "loader"
+  ],
+  "author": "Andre Caetano",
+  "license": "MIT",
+  "dependencies": {
+    "findup-sync": "^0.2.1",
+    "globule": "^0.2.0"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "jinx-mempanel": "^1.0.2",
+    "mocha": "^2.2.4"
+  }
 }
