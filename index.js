@@ -22,7 +22,7 @@ var getOnlyCompatible = function(files){
 }
 
 var isCompatible = function(file){
-	var ext = ['.as','.swc'];
+	var ext = ['.jinx','.as','.swc'];
 	for(var i in ext) {
 		if(path.extname(file)==ext[i]) return true;
 	}
@@ -72,7 +72,6 @@ var addPkgPath = function(files,pkgPath){
 	return files;
 }
 
-
 module.exports = function(relativeTo){
 	var allFiles = [];
 	var pkgs = ['../'].concat(getJinxPkgsNames());
@@ -86,7 +85,7 @@ module.exports = function(relativeTo){
 		if(jinxPkgFiles.length) allFiles = allFiles.concat(addPkgPath(jinxPkgFiles,path.join(root, pkgs[i])));
 	}
 	for(i in allFiles){
-		if(path.extname(allFiles[i])=='.as'){
+		if(path.extname(allFiles[i])=='.as' || path.extname(allFiles[i])=='.jinx'){
 			files['as'].push(pathToSrcFile(relativeTo,allFiles[i]));
 		} else {
 			files['swc'].push(pathToSrcFile('./',allFiles[i]));
