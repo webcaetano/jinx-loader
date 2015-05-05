@@ -72,21 +72,21 @@ var addPkgPath = function(files,pkgPath){
 	return files;
 }
 
-module.exports = function(relativeTo){
+module.exports = function(modules,relativeTo){
 	var allFiles = [];
-	var pkgs = ['../'].concat(getJinxPkgsNames());
+	var modules = ['../'].concat(getJinxPkgsNames());
 	var root = path.resolve('node_modules');
 	var i;
-	var files = {as:[],swc:[]};
+	var files = {jinx:[],swc:[]};
 
-	for(i in pkgs){
-		var pkgFile = JSON.parse(fs.readFileSync(path.join(root, pkgs[i], 'package.json')));
+	for(i in modules){
+		var pkgFile = JSON.parse(fs.readFileSync(path.join(root, modules[i], 'package.json')));
 		var jinxPkgFiles = getJinxPkgFiles(pkgFile);
-		if(jinxPkgFiles.length) allFiles = allFiles.concat(addPkgPath(jinxPkgFiles,path.join(root, pkgs[i])));
+		if(jinxPkgFiles.length) allFiles = allFiles.concat(addPkgPath(jinxPkgFiles,path.join(root, modules[i])));
 	}
 	for(i in allFiles){
 		if(path.extname(allFiles[i])=='.as' || path.extname(allFiles[i])=='.jinx'){
-			files['as'].push(pathToSrcFile(relativeTo,allFiles[i]));
+			files['jinx'].push((relativeTo ? pathToSrcFile(relativeTo,allFiles[i]) : allFiles[i]));
 		} else {
 			files['swc'].push(pathToSrcFile('./',allFiles[i]));
 		}
