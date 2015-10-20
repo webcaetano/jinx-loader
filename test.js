@@ -13,8 +13,8 @@ describe('jinx-loader', function() {
 		var main = jinxLoader.main(['jinx-mempanel'],mainFile);
 		var swc = jinxLoader.swc(['jinx-mempanel']);
 
-		console.log(main)
-		console.log(swc)
+		// console.log(main)
+		// console.log(swc)
 		expect(main).to.exist;
 		expect(swc).to.exist;
 		expect(main.length).to.be.at.least(1);

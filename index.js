@@ -97,7 +97,7 @@ module.exports = {
 				if(jinxPkgFiles.length) files = files.concat(addPkgPath(jinxPkgFiles,path.join(root, modules[i])));
 			} else {
 				var filePath = path.resolve(path.dirname(relativeTo),modules[i]);
-				files.push(path.extname(filePath)=='.as' || path.extname(filePath)=='.jinx' ? filePath : globule.find(filePath+".*")[0])
+				files.push(path.extname(filePath)=='.as' || path.extname(filePath)=='.jinx' ? filePath : globule.find(filePath+".*")[0]);
 			}
 		}
 
@@ -119,11 +119,7 @@ module.exports = {
 
 		for(i in pkgsFiles){
 			var jinxPkgFiles = getJinxPkgFiles(JSON.parse(fs.readFileSync(pkgsFiles[i])),true);
-			if(isNodeModule(pkgs,pkgsFiles[i])){
-				if(jinxPkgFiles.length)files = files.concat(addPkgPath(jinxPkgFiles,path.dirname(pkgsFiles[i])));
-			} else {
-				files = files.concat(jinxPkgFiles);
-			}
+			if(jinxPkgFiles.length)files = files.concat(addPkgPath(jinxPkgFiles,path.dirname(pkgsFiles[i])));
 		}
 
 		for(i in files) files[i]=pathToSrcFile('./',files[i]);
