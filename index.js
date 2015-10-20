@@ -79,10 +79,8 @@ function arrayify(el) {
 	return Array.isArray(el) ? el : [el];
 }
 
-var pkgs = getAllPkgsNames();
-
-var isNodeModule = function(module){
-	return !(pkgs.indexOf(module)==-1 && (path.extname(module)=='.as' || path.extname(module)=='.jinx'))
+var isNodeModule = function(pkgs,module){
+	return pkgs.indexOf(module)!=-1 && !module.match(/\.\//) && (path.extname(module)!='.as' && path.extname(module)!='.jinx');
 }
 
 module.exports = {
@@ -90,14 +88,16 @@ module.exports = {
 		var root = path.resolve('node_modules');
 		var i;
 		var files = [];
+    	var pkgs = getAllPkgsNames();
 
 		for(i in modules){
-			if(isNodeModule(modules[i])){
+			if(isNodeModule(pkgs,modules[i])){
 				var pkgFile = JSON.parse(fs.readFileSync(path.join(root, modules[i], 'package.json')));
 				var jinxPkgFiles = getJinxPkgFiles(pkgFile);
 				if(jinxPkgFiles.length) files = files.concat(addPkgPath(jinxPkgFiles,path.join(root, modules[i])));
 			} else {
-				files.push(path.resolve(relativeTo,modules[i]))
+				var filePath = path.resolve(path.dirname(relativeTo),modules[i]);
+				files.push(path.extname(filePath)=='.as' || path.extname(filePath)=='.jinx' ? filePath : globule.find(filePath+".*")[0])
 			}
 		}
 
@@ -109,16 +109,17 @@ module.exports = {
 		var i;
 		var files = [];
 		var pkgsFiles = [path.join('./', 'package.json')];
+    	var pkgs = getAllPkgsNames();
 
 		for(i in modules){
-			if(isNodeModule(modules[i])){
+			if(isNodeModule(pkgs,modules[i])){
 				pkgsFiles.push(path.join(root, modules[i], 'package.json'));
 			}
 		}
 
 		for(i in pkgsFiles){
 			var jinxPkgFiles = getJinxPkgFiles(JSON.parse(fs.readFileSync(pkgsFiles[i])),true);
-			if(isNodeModule(pkgsFiles[i])){
+			if(isNodeModule(pkgs,pkgsFiles[i])){
 				if(jinxPkgFiles.length)files = files.concat(addPkgPath(jinxPkgFiles,path.dirname(pkgsFiles[i])));
 			} else {
 				files = files.concat(jinxPkgFiles);
