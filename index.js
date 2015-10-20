@@ -3,6 +3,8 @@ var fs = require('fs');
 var findup = require('findup-sync');
 var globule = require('globule');
 
+var ext = ['.jinx','.as','.js'];
+
 var pathToSrcFile = function(src,dest){
 	var p = path.relative(path.dirname(src),path.dirname(dest)).split('\\').join('/');
 	return (p && p.length ? p+'/'+path.basename(dest) : dest);
@@ -20,7 +22,6 @@ var getOnlyCompatible = function(files,swc){
 }
 
 var isCompatible = function(file,swc){
-	var ext = ['.jinx','.as'];
 	if(swc){
 		if(path.extname(file)=='.swc' || !path.extname(file)) return true;
 	} else {
@@ -31,13 +32,34 @@ var isCompatible = function(file,swc){
 	return false;
 }
 
-var getJinxPkgFiles = function(pkgs,swc){
+var tryExtentions = function(pkgPath){
+	var pattern = [];
+	for(var i in ext) pattern.push(path.join(path.dirname(pkgPath),'index'+ext[i]));
+	var m = globule.find(pattern);
+
+	return m.length ? [path.basename(m[0])] : [];
+}
+
+var countSWC = function(files){
+	var resp = 0;
+	for(var i in files){
+		if(path.extname(files[i])=='.swc') ++resp;
+	}
+	return resp;
+}
+
+var getJinxPkgFiles = function(pkgs,swc,pkgPath){
 	pkgs = arrayify(pkgs);
 	var resp = [];
 	for(var i in pkgs){
 		if(pkgs[i].main && isCompatible(pkgs[i].main,swc)) resp.push(pkgs[i].main);
 		if(pkgs[i].files) resp = resp.concat(getOnlyCompatible(pkgs[i].files,swc));
 	}
+
+	if(pkgPath && (!resp.length || countSWC(resp)==resp.length)){
+		resp = tryExtentions(pkgPath);
+	}
+
 	return removeEmpty(resp);
 }
 
@@ -52,13 +74,10 @@ var getAllPkgsNames = function(options){
 	options = options || {};
 
 	var pattern = arrayify(options.pattern || ['*']);
-	var config = options.config || findup('package.json');
+	var config = findup('package.json',{cwd:options.config});
 	var scope = arrayify(options.scope || ['dependencies', 'devDependencies', 'peerDependencies']);
 
 	if (typeof config === 'string') config = require(path.resolve(config));
-
-
-	pattern.concat(['!jinx','!jinx-loader']);
 
 	var names = scope.reduce(function (result, prop) {
 		return result.concat(Object.keys(config[prop] || {}));
@@ -85,15 +104,18 @@ var isNodeModule = function(pkgs,module){
 
 module.exports = {
 	main:function(modules,relativeTo){
-		var root = path.resolve('node_modules');
+		var root = path.resolve(path.dirname(findup('package.json',{cwd:relativeTo})),'node_modules');
 		var i;
 		var files = [];
-    	var pkgs = getAllPkgsNames();
+    	var pkgs = getAllPkgsNames({
+    		config:relativeTo
+    	});
 
 		for(i in modules){
 			if(isNodeModule(pkgs,modules[i])){
-				var pkgFile = JSON.parse(fs.readFileSync(path.join(root, modules[i], 'package.json')));
-				var jinxPkgFiles = getJinxPkgFiles(pkgFile);
+				var pkgPath = path.join(root, modules[i], 'package.json');
+				var pkgFile = JSON.parse(fs.readFileSync(pkgPath));
+				var jinxPkgFiles = getJinxPkgFiles(pkgFile,false,pkgPath);
 				if(jinxPkgFiles.length) files = files.concat(addPkgPath(jinxPkgFiles,path.join(root, modules[i])));
 			} else {
 				var filePath = path.resolve(path.dirname(relativeTo),modules[i]);
